@@ -1,0 +1,26 @@
+version: 2.1
+orbs:
+  gally-bot: lifen/gally-bot@dev:first
+
+jobs:
+  build-and-push:
+    docker:
+      - image: circleci/node:lts
+    steps:
+      - checkout
+      - run:
+          name: Install git-lfs
+          command: |
+            curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+            sudo apt-get install git-lfs
+            git lfs fetch
+      - gally-bot/docker-build-and-push:
+          applicationName: looker
+          dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build-and-push:
+          context: org-global
