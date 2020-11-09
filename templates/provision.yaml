@@ -1,0 +1,8 @@
+license_key: "44BB381D13C5BD7F88B9"
+host_url: "https://localhost:9999"
+# Warning Cf. documentation
+user:
+  first_name: "John"
+  last_name: "Smith"
+  email: "user@company.com"
+  password: "Password123&"
