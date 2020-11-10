@@ -30,14 +30,19 @@ RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'",
   && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $HOME/looker.jar \
   && curl "$(cat api_response.json | jq -r '.depUrl')" -o $HOME/looker-dependencies.jar
 
-COPY templates/looker_run.sh $HOME/looker_run.sh
-
 RUN chown -R looker:looker $HOME
 
 ENV PORT 9999
+ENV LOOKERPORT 9999
 EXPOSE 9999
 
 ENV API_PORT 19999
 EXPOSE 19999
 
-CMD ["/home/looker/looker_run.sh", "start"]
+ENV JMXARGS "-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.port=9910 -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.ssl=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.local.only=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.authenticate=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.access.file=$HOME/.lookerjmx/jmxremote.access -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.password.file=$HOME/.lookerjmx/jmxremote.password"
+ENV JAVAARGS ""
+ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
+ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
+ENV PROTOCOL "https"
+
+CMD ["java","$JAVAJVMARGS","$JAVAARGS","-jar","looker.jar", "start", "$LOOKERARGS"]
