@@ -47,4 +47,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD java $JAVAJVMARGS $JAVAARGS -jar looker.jar start $LOOKERARGS
+CMD exec gosu java $JAVAJVMARGS $JAVAARGS -jar looker.jar start $LOOKERARGS
