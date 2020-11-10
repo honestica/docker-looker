@@ -33,26 +33,12 @@ fi
 LOOKERPORT=${LOOKERPORT:-"9999"}
 
 start() {
-    fixcrypt
     java \
   -XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80 \
   ${JAVAARGS} \
   -jar looker.jar start ${LOOKERARGS}
 }
 
-
-fixcrypt() {
-    CRYPTEXIST=`/sbin/ldconfig -p | grep -c '\slibcrypt.so\s'`
-
-    if [ $CRYPTEXIST -eq 0 ]; then
-        if [ ! -d .tmp ]; then
-            mkdir .tmp
-        fi
-        CRYPTLN=`/sbin/ldconfig -p | grep '\slibcrypt\.so\.[[:digit:]]' | awk '{print $(NF)}'`
-        ln -s -f $CRYPTLN `pwd`/.tmp/libcrypt.so
-        export LD_LIBRARY_PATH=`pwd`/.tmp/:$LD_LIBRARY_PATH
-    fi
-}
 
 case "$1" in
   start)
