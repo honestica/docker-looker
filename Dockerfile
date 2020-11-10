@@ -45,4 +45,6 @@ ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 
 ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
 ENV PROTOCOL "https"
 
+USER looker
+
 CMD ["java","$JAVAJVMARGS","$JAVAARGS","-jar","looker.jar", "start", "$LOOKERARGS"]
