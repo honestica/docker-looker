@@ -18,7 +18,7 @@ JMXARGS="-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvm
 
 # to set up JMX monitoring, add JMXARGS to JAVAARGS
 JAVAARGS=""
-LOOKERARGS="--no-daemonize"
+LOOKERARGS="--no-daemonize --log-format=json --no-log-to-file"
 
 # check if --no-ssl is specified in LOOKERARGS and set protocol accordingly
 PROTOCOL=""
