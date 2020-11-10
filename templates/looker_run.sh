@@ -36,7 +36,6 @@ start() {
     fixcrypt
     java \
   -XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80 \
-  -Xlog:gc*,gc+ref=debug,gc+heap=debug,gc+age=debug:tags,uptime,time,level:filecount=7,filesize=10m \
   ${JAVAARGS} \
   -jar looker.jar start ${LOOKERARGS}
 }
