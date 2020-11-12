@@ -17,10 +17,14 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
 ENV HOME /home/looker
-ENV LOOKERDIR /opt/looker
+ENV LOOKER_DIR /opt/looker
+
+# Minor version should be still valid or the build will failed, get the last
+# from the download page https://download.looker.com/
+ENV LOOKER_VERSION 7.18.23
 
 RUN mkdir -p $HOME
-RUN mkdir -p $LOOKERDIR
+RUN mkdir -p $LOOKER_DIR
 
 WORKDIR $HOME
 COPY \
@@ -30,9 +34,9 @@ COPY \
 ARG LICENSE
 ARG EMAIL
 RUN echo $LICENSE
-RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-7.18.23.jar"}' https://apidownload.looker.com/download > api_response.json \
-  && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKERDIR/looker.jar \
-  && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKERDIR/looker-dependencies.jar
+RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-'"$LOOKER_VERSION"'.jar"}' https://apidownload.looker.com/download > api_response.json \
+  && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKER_DIR/looker.jar \
+  && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKER_DIR/looker-dependencies.jar
 
 RUN chown -R looker:looker $HOME
 
@@ -51,4 +55,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKERDIR/looker.jar start $LOOKERARGS
+CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS
