@@ -27,9 +27,6 @@ RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
 
 WORKDIR $HOME
-COPY \
-  templates/provision.yaml \
-  $HOME/
 
 ARG LICENSE
 ARG EMAIL
