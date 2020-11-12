@@ -30,7 +30,7 @@ COPY \
 ARG LICENSE
 ARG EMAIL
 RUN echo $LICENSE
-RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-7.18.21.jar"}' https://apidownload.looker.com/download > api_response.json \
+RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-7.18.23.jar"}' https://apidownload.looker.com/download > api_response.json \
   && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKERDIR/looker.jar \
   && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKERDIR/looker-dependencies.jar
 
