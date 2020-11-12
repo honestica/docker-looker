@@ -2,11 +2,7 @@
 
 > Looker is a cloud-based business intelligence (BI) platform designed to explore and analyze data.
 
-<!-- START doctoc generated TOC please keep comment here to allow auto update -->
-<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-
 - [Summary](#summary)
-- [Why](#why)
 - [How](#how)
 - [What](#what)
   - [Version](#version)
@@ -18,21 +14,15 @@
   - [Localhost port-foward](#localhost-port-foward)
 - [Useful links](#useful-links)
 
-<!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# Why
-
-Own by Google, Looker can help both large and small companies glean value from their data.
-With it, they can access a web-based interface where they can easily get real-time insights
-on their operations via data analytics.
-
-# How
-
 # What
+
+## Purpose
+
+This docker image is made to be run in Kubernete with the helm chart looker located at https://github.com/honestica/lifen-charts.
 
 ## Version
 
-The current version is `looker-7.18.21.jar`.
+The current version is `looker-7.18.23.jar`.
 
 ## Repo organization
 
@@ -43,12 +33,8 @@ The current version is `looker-7.18.21.jar`.
 ├── Notes.md # Explanations and usage for the current changes
 ├── README.md # Deprecated version
 └── templates
-    ├── looker_run.sh # Required script (find more info below)
     └── provision.yaml # Default config (find more info below)
 ```
-
-The `looker_run.sh` file is mantory to run looker.
-That's explain why the `CMD`.
 
 The `provision.yaml` file allow to automatically charge config as the licence key, users, etc.
 It's like the definition of a root user when you start using Looker.
