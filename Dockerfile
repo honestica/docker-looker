@@ -51,8 +51,9 @@ ENV JMXARGS "-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma
 ENV JAVAARGS ""
 ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
 ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
+ENV LOOKEREXTRAARGS ""
 ENV PROTOCOL "https"
 
 USER looker
 
-CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS
+CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
