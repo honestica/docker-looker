@@ -17,7 +17,11 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
 ENV HOME /home/looker
+ENV LOOKERDIR /opt/looker
+
 RUN mkdir -p $HOME
+RUN mkdir -p $LOOKERDIR
+
 WORKDIR $HOME
 COPY \
   templates/provision.yaml \
@@ -27,8 +31,8 @@ ARG LICENSE
 ARG EMAIL
 RUN echo $LICENSE
 RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-7.18.21.jar"}' https://apidownload.looker.com/download > api_response.json \
-  && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $HOME/looker.jar \
-  && curl "$(cat api_response.json | jq -r '.depUrl')" -o $HOME/looker-dependencies.jar
+  && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKERDIR/looker.jar \
+  && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKERDIR/looker-dependencies.jar
 
 RUN chown -R looker:looker $HOME
 
@@ -47,4 +51,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD exec java $JAVAJVMARGS $JAVAARGS -jar looker.jar start $LOOKERARGS
+CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKERDIR/looker.jar start $LOOKERARGS
