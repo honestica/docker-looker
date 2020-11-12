@@ -16,7 +16,7 @@ RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
-ENV HOME /home/looker
+ENV HOME /opt/looker
 ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
