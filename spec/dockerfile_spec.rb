@@ -21,4 +21,9 @@ describe 'Dockerfile' do
       set :docker_url, 'unix:///var/run/docker.sock'
     end
   end
+
+  describe command('chromium --version') do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/chrome/i) }
+  end
 end
