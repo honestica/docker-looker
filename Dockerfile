@@ -1,18 +1,29 @@
 FROM ubuntu:20.04
 
-RUN apt-get update && DEBIAN_FRONTEND="noninteractive" apt-get -y install \
-  ca-certificates \
-  curl \
-  jq \
-  phantomjs \
-  libc6-dev \
-  libfontconfig1 \
-  mysql-client \
-  tzdata \
-  openjdk-11-jre \
-  git \
-  --no-install-recommends \
-  && apt-get upgrade -y
+RUN apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
+    ca-certificates \
+    curl \
+    fonts-freefont-otf \
+    git \
+    gnupg \
+    jq \
+    libc6-dev \
+    libfontconfig1 \
+    mysql-client \
+    openjdk-11-jre \
+    phantomjs \
+    tzdata \
+ && apt-get upgrade -y \
+ && apt-get clean
+
+RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
+ && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
+ && apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
+    google-chrome-stable \
+ && ln -s /usr/bin/google-chrome /usr/bin/chromium \
+ && apt-get clean
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
@@ -21,7 +32,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/
-ENV LOOKER_VERSION 7.18.23
+ENV LOOKER_VERSION 7.18.33
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
