@@ -32,7 +32,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/
-ENV LOOKER_VERSION 7.18.23
+ENV LOOKER_VERSION 7.18.33
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
