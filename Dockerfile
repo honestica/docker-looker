@@ -13,6 +13,7 @@ RUN apt-get update \
     mysql-client \
     openjdk-11-jre \
     phantomjs \
+    tini \
     tzdata \
  && apt-get upgrade -y \
  && apt-get clean
@@ -32,7 +33,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/
-ENV LOOKER_VERSION 7.18.33
+ENV LOOKER_VERSION 7.20.29
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
@@ -64,4 +65,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
+CMD tini -- java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS

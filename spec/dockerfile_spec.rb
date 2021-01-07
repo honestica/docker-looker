@@ -13,7 +13,7 @@ describe 'Dockerfile' do
     set :backend, :docker
     set :docker_image, "#{repository}/#{image}:#{tag}"
     set :docker_container_create_options,
-        'Entrypoint' => ['/bin/sh']
+        'Entrypoint' => ['tini', '--', '/bin/sh']
 
     if ENV.include?('DOCKER_HOST')
       set :docker_url, ENV['DOCKER_HOST']
