@@ -65,4 +65,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD tini -- java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
+CMD exec tini -- java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
