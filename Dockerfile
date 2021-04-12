@@ -62,7 +62,7 @@ EXPOSE 19999
 ENV JMX_EXPORTER_PORT 8080
 
 ENV JMXARGS "-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.port=9910 -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.ssl=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.local.only=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.authenticate=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.access.file=$HOME/.lookerjmx/jmxremote.access -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.password.file=$HOME/.lookerjmx/jmxremote.password"
-ENV JAVAARGS "-javaagent:$LOOKER_DIR/jmx_prometheus_javaagent.jar=8080:jmx_prometheus_javaagent.yaml"
+ENV JAVAARGS "-javaagent:$LOOKER_DIR/jmx_prometheus_javaagent.jar=8080:$LOOKER_DIR/jmx_prometheus_javaagent.yaml"
 ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
 ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
 ENV LOOKEREXTRAARGS ""
