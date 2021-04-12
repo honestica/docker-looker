@@ -33,7 +33,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 21.0.45
+ENV LOOKER_VERSION 21.4.22
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
@@ -46,6 +46,10 @@ RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'",
   && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKER_DIR/looker.jar \
   && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKER_DIR/looker-dependencies.jar
 
+ENV JMX_EXPORTER_VERSION 0.15.0
+RUN curl https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/$JMX_EXPORTER_VERSION/jmx_prometheus_javaagent-$JMX_EXPORTER_VERSION.jar -o $LOOKER_DIR/jmx_prometheus_javaagent.jar
+COPY jmx_prometheus_javaagent.yaml $LOOKER_DIR/jmx_prometheus_javaagent.yaml
+
 RUN chown -R looker:looker $HOME
 
 ENV PORT 9999
@@ -55,8 +59,10 @@ EXPOSE 9999
 ENV API_PORT 19999
 EXPOSE 19999
 
+ENV JMX_EXPORTER_PORT 8080
+
 ENV JMXARGS "-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.port=9910 -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.ssl=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.local.only=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.authenticate=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.access.file=$HOME/.lookerjmx/jmxremote.access -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.password.file=$HOME/.lookerjmx/jmxremote.password"
-ENV JAVAARGS ""
+ENV JAVAARGS "-javaagent:$LOOKER_DIR/jmx_prometheus_javaagent.jar=8080:jmx_prometheus_javaagent.yaml"
 ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
 ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
 ENV LOOKEREXTRAARGS ""
