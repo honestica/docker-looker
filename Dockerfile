@@ -46,7 +46,7 @@ RUN curl -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'",
   && cat api_response.json && curl "$(cat api_response.json | jq -r '.url')" -o $LOOKER_DIR/looker.jar \
   && curl "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKER_DIR/looker-dependencies.jar
 
-ENV JMX_EXPORTER_VERSION 0.15.0
+ENV JMX_EXPORTER_VERSION 0.16.1
 RUN curl https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/$JMX_EXPORTER_VERSION/jmx_prometheus_javaagent-$JMX_EXPORTER_VERSION.jar -o $LOOKER_DIR/jmx_prometheus_javaagent.jar
 COPY jmx_prometheus_javaagent.yaml $LOOKER_DIR/jmx_prometheus_javaagent.yaml
 
