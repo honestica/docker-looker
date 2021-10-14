@@ -11,6 +11,7 @@ RUN apt-get update \
     libc6-dev \
     libfontconfig1 \
     mysql-client \
+    netbase \
     openjdk-11-jre \
     phantomjs \
     tini \

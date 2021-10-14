@@ -26,4 +26,8 @@ describe 'Dockerfile' do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/chrome/i) }
   end
+
+  describe file('/etc/protocols') do
+    it { should exist }
+  end
 end
