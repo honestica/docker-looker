@@ -2,8 +2,10 @@ FROM ubuntu:jammy-20220421
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
+    bzip2 \
     ca-certificates \
     curl \
+    fontconfig \
     fonts-freefont-otf \
     git \
     gnupg \
@@ -13,11 +15,16 @@ RUN apt-get update \
     mysql-client \
     netbase \
     openjdk-11-jre \
-    phantomjs \
     tini \
     tzdata \
  && apt-get upgrade -y \
- && apt-get clean
+ && apt-get clean \
+ && rm -rf /var/lib/apt/lists/*
+
+ENV PHANTOMJS_VERSION 2.1.1
+ENV OPENSSL_CONF /etc/ssl
+RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 | tar -C /tmp -xjf- \
+ && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin
 
 RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
