@@ -22,6 +22,11 @@ describe 'Dockerfile' do
     end
   end
 
+  describe command('phantomjs --version') do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/^2\./) }
+  end
+
   describe command('chromium --version') do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/chrome/i) }
