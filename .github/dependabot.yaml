@@ -1,0 +1,22 @@
+version: 2
+registries:
+  docker-registry-registry-hub-docker-com:
+    type: docker-registry
+    url: https://registry.hub.docker.com
+    username: lifendependabot
+    password: "${{secrets.DOCKER_REGISTRY_REGISTRY_HUB_DOCKER_COM_PASSWORD}}"
+
+updates:
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: weekly
+    day: sunday
+    time: "02:00"
+    timezone: Europe/Paris
+  target-branch: master
+  reviewers:
+  - marcmillien
+  - mtparet
+  registries:
+  - docker-registry-registry-hub-docker-com
