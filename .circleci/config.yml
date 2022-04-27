@@ -27,6 +27,7 @@ jobs:
             git lfs fetch
       - gally-bot/docker-build-and-push:
           applicationName: looker
+          dockerEngineVersion: 20.10.12
           dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE
 
 workflows:
