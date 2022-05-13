@@ -23,7 +23,7 @@ setup: ## Install local requirement to work on this image
 
 .PHONY: sh
 sh: ## Get a shell on given image (options: repository, image, tag)
-	docker run --rm -it --entrypoint /bin/bash $(repository)/$(image):$(tag)
+	docker run --rm -it -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(tag)
 
 .PHONY: test
 test: ## Run tests on given image (options: repository, image, tag)

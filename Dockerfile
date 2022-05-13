@@ -31,8 +31,10 @@ RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
  && apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
     google-chrome-stable \
- && ln -s /usr/bin/google-chrome /usr/bin/chromium \
  && apt-get clean
+
+COPY chromium /usr/bin
+RUN chmod +x /usr/bin/chromium
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
@@ -41,7 +43,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 22.6.30
+ENV LOOKER_VERSION 22.6.55
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
