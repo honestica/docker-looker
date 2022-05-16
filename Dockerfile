@@ -30,8 +30,9 @@ ENV CHROME_VERSION 101.0.4951.64-1
 RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
- && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
-    google-chrome-stable=${CHROME_VERSION} \
+ && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
+ && dpkg -i /tmp/chrome.deb; apt-get install --fix-broken -y --no-install-recommends \
+ && rm /tmp/chrome.deb \
  && apt-get clean
 
 COPY chromium /usr/bin
