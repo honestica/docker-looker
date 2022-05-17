@@ -26,13 +26,17 @@ ENV OPENSSL_CONF /etc/ssl
 RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 | tar -C /tmp -xjf- \
  && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin
 
+ENV CHROME_VERSION 101.0.4951.64-1
 RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
- && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
-    google-chrome-stable \
- && ln -s /usr/bin/google-chrome /usr/bin/chromium \
+ && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
+ && dpkg -i /tmp/chrome.deb; apt-get install --fix-broken -y --no-install-recommends \
+ && rm /tmp/chrome.deb \
  && apt-get clean
+
+COPY chromium /usr/bin
+RUN chmod +x /usr/bin/chromium
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
@@ -41,7 +45,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 22.6.30
+ENV LOOKER_VERSION 22.6.55
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR

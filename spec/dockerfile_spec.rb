@@ -13,7 +13,12 @@ describe 'Dockerfile' do
     set :backend, :docker
     set :docker_image, "#{repository}/#{image}:#{tag}"
     set :docker_container_create_options,
-        'Entrypoint' => ['tini', '--', '/bin/sh']
+        'Entrypoint' => ['tini', '--', '/bin/sh'],
+        'HostConfig' => {
+          'Binds' => [
+            "#{File.expand_path __dir__}/page.html:/srv/page.html",
+          ]
+        }
 
     if ENV.include?('DOCKER_HOST')
       set :docker_url, ENV['DOCKER_HOST']
@@ -30,6 +35,14 @@ describe 'Dockerfile' do
   describe command('chromium --version') do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/chrome/i) }
+  end
+
+  describe command('chromium --headless --disable-gpu --print-to-pdf /srv/page.html') do
+    its(:exit_status) { should eq 0 }
+  end
+
+  describe file('output.pdf') do
+    it { should exist }
   end
 
   describe file('/etc/protocols') do
