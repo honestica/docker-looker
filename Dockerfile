@@ -15,6 +15,8 @@ RUN apt-get update \
     mysql-client \
     netbase \
     openjdk-11-jre \
+    python3 \
+    python3-pip \
     tini \
     tzdata \
  && apt-get upgrade -y \
@@ -38,6 +40,9 @@ RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
 COPY chromium /usr/bin
 RUN chmod +x /usr/bin/chromium
 
+RUN pip3 install boto3==1.24.20
+COPY assume_role_exec /usr/bin
+
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
 ENV HOME /opt/looker
@@ -45,7 +50,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 22.8.33
+ENV LOOKER_VERSION 22.10.32
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
@@ -76,4 +81,4 @@ ENV PROTOCOL "https"
 
 USER looker
 
-CMD exec tini -- java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
+CMD exec tini -- assume_role_exec java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar start $LOOKERARGS $LOOKEREXTRAARGS
