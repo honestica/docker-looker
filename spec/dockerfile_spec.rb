@@ -37,6 +37,7 @@ describe 'Dockerfile' do
     its(:stdout) { should match(/^2\./) }
   end
 
+  # https://community.looker.com/general-looker-administration-35/troubleshooting-common-chromium-errors-20621
   describe command('chromium --version') do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/chrome/i) }
@@ -49,6 +50,17 @@ describe 'Dockerfile' do
   describe file('output.pdf') do
     it { should exist }
   end
+
+  describe command(
+    <<~CMD
+      chromium --headless --remote-debugging-port=9222 &
+      sleep 2
+      curl -Ssv http://127.0.0.1:9222
+    CMD
+  ) do
+    its(:exit_status) { should eq 0 }
+  end
+
 
   describe file('/etc/protocols') do
     it { should exist }
