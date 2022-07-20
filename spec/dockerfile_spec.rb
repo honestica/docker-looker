@@ -27,6 +27,11 @@ describe 'Dockerfile' do
     end
   end
 
+  describe command('whoami') do
+    its(:stdout) { should match(/looker/i) }
+    its(:exit_status) { should eq 0 }
+  end
+
   describe command('phantomjs --version') do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/^2\./) }
