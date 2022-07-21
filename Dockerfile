@@ -29,7 +29,7 @@ RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phan
  && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin
 
 ENV CHROME_VERSION 96.0.4664.110-1
-RUN curl https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
+RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
  && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
@@ -50,7 +50,7 @@ ENV LOOKER_DIR /opt/looker
 
 # Minor version should be still valid or the build will failed, get the last
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 22.10.58
+ENV LOOKER_VERSION 22.10.62
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
