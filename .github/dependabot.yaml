@@ -3,8 +3,6 @@ registries:
   docker-registry-registry-hub-docker-com:
     type: docker-registry
     url: https://registry.hub.docker.com
-    username: lifendependabot
-    password: "${{secrets.DOCKER_REGISTRY_REGISTRY_HUB_DOCKER_COM_PASSWORD}}"
 
 updates:
 - package-ecosystem: docker
