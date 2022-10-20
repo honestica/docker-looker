@@ -12,5 +12,3 @@ updates:
   reviewers:
   - marcmillien
   - mtparet
-  registries:
-  - docker-registry-registry-hub-docker-com
