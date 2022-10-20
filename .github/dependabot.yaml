@@ -1,8 +1,4 @@
 version: 2
-registries:
-  docker-registry-registry-hub-docker-com:
-    type: docker-registry
-    url: https://registry.hub.docker.com
 
 updates:
 - package-ecosystem: docker
