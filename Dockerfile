@@ -48,9 +48,9 @@ RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 ENV HOME /opt/looker
 ENV LOOKER_DIR /opt/looker
 
-# Minor version should be still valid or the build will failed, get the last
+# You can get the last version
 # from the download page https://download.looker.com/validate
-ENV LOOKER_VERSION 22.20.28
+ENV LOOKER_VERSION 22.20
 
 RUN mkdir -p $HOME
 RUN mkdir -p $LOOKER_DIR
@@ -59,9 +59,10 @@ WORKDIR $HOME
 
 ARG LICENSE
 ARG EMAIL
-RUN curl -Ss -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-'"$LOOKER_VERSION"'.jar"}' https://apidownload.looker.com/download > api_response.json \
+RUN curl -Ss -X POST -H 'Content-Type: application/json' -d '{"lic": "'"$LICENSE"'", "email": "'"$EMAIL"'", "latest": "specific", "specific": "looker-'"$LOOKER_VERSION"'-latest.jar"}' https://apidownload.looker.com/download > api_response.json \
   && cat api_response.json && curl -Ss "$(cat api_response.json | jq -r '.url')" -o $LOOKER_DIR/looker.jar \
-  && curl -Ss "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKER_DIR/looker-dependencies.jar
+  && curl -Ss "$(cat api_response.json | jq -r '.depUrl')" -o $LOOKER_DIR/looker-dependencies.jar \
+  && rm api_response.json
 
 RUN chown -R looker:looker $HOME
 
