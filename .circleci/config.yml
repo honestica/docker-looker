@@ -25,11 +25,18 @@ jobs:
             curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
             sudo apt-get install git-lfs
             git lfs fetch
-      - setup_remote_docker:
-          docker_layer_caching: true
-          version: 20.10.12
-      - run: make build email=$EMAIL license=$LICENSE
-      - run: make push email=$EMAIL license=$LICENSE
+      - run:
+          name: Set LOOKER_VERSION
+          command: |
+            echo "export LOOKER_VERSION="$(make version email=$EMAIL license=$LICENSE) >> "$BASH_ENV"
+            source "$BASH_ENV"
+            echo $LOOKER_VERSION
+      - run: make download email=$EMAIL license=$LICENSE
+      - bot/docker-build-and-push:
+          applicationName: looker
+          dockerEngineVersion: 20.10.12
+          dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE --build-arg LOOKER_VERSION=$LOOKER_VERSION
+          dockerTag: $LOOKER_VERSION-$CIRCLE_SHA1
 
 workflows:
   version: 2
@@ -39,6 +46,8 @@ workflows:
           context: org-global
       - build-and-push:
           context: org-global
+          requires:
+            - test
           filters:
             branches:
               only:

@@ -37,6 +37,6 @@ test: ## Run tests on given image (options: repository, image, version)
 test-hadolint: ## Run hadolint test
 	docker run --rm -v $(PWD):/srv -w /srv hadolint/hadolint hadolint Dockerfile
 
-.PHONY: push
-push: ## Push the image to docker hub (options: repository, image, version, email, license)
-	@docker push $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
+.PHONY: version
+version:
+	@scripts/full_version --version $(version) --email $(email) --license $(license)
