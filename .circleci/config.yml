@@ -13,10 +13,10 @@ jobs:
           version: 20.10.12
       - run: make build email=$EMAIL license=$LICENSE
       - run: make setup
-      - run: make test
+      - run: make test email=$EMAIL license=$LICENSE
   build-and-push:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/ruby:2.7.2
     steps:
       - checkout
       - run:
@@ -25,10 +25,11 @@ jobs:
             curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
             sudo apt-get install git-lfs
             git lfs fetch
-      - bot/docker-build-and-push:
-          applicationName: looker
-          dockerEngineVersion: 20.10.12
-          dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE
+      - setup_remote_docker:
+          docker_layer_caching: true
+          version: 20.10.12
+      - run: make build email=$EMAIL license=$LICENSE
+      - run: make push email=$EMAIL license=$LICENSE
 
 workflows:
   version: 2

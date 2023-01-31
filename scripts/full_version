@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'getoptlong'
+require_relative 'common'
+
+opts = GetoptLong.new(
+  [ '--version', '-v', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--license', '-l', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--email', '-e', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--help', GetoptLong::REQUIRED_ARGUMENT ],
+)
+
+def usage
+  puts <<~EOF
+    #{$PROGRAM_NAME} --version VERSION --license LICENSE --email EMAIL
+
+    Example:
+      #{$PROGRAM_NAME} --version 22.20 --license ABCD --email simon.fitoussi@lifen.fr
+  EOF
+  exit 0
+end
+
+version = nil
+license = nil
+email = nil
+opts.each do |opt, arg|
+  case opt
+  when '--help'
+    usage
+  when '--version'
+    version = arg
+  when '--license'
+    license = arg
+  when '--email'
+    email = arg
+  else
+    puts "Unknown option !"
+    usage
+  end
+end
+
+usage if version.nil? || license.nil? || email.nil?
+
+looker = Looker.new(version, license, email)
+puts looker.full_version
