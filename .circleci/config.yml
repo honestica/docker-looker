@@ -2,6 +2,11 @@ version: 2.1
 orbs:
   bot: lifen/bot@0
 
+parameters:
+  looker-version:
+    type: string
+    default: "22.20"
+
 jobs:
   test:
     docker:
@@ -11,9 +16,9 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
           version: 20.10.12
-      - run: make build email=$EMAIL license=$LICENSE
+      - run: make build email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - run: make setup
-      - run: make test email=$EMAIL license=$LICENSE
+      - run: make test email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
   build-and-push:
     docker:
       - image: cimg/ruby:2.7.2
@@ -28,10 +33,10 @@ jobs:
       - run:
           name: Set LOOKER_VERSION
           command: |
-            echo "export LOOKER_VERSION="$(make version email=$EMAIL license=$LICENSE) >> "$BASH_ENV"
+            echo "export LOOKER_VERSION="$(make version email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>) >> "$BASH_ENV"
             source "$BASH_ENV"
             echo $LOOKER_VERSION
-      - run: make download email=$EMAIL license=$LICENSE
+      - run: make download email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - bot/docker-build-and-push:
           applicationName: looker
           dockerEngineVersion: 20.10.12

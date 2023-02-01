@@ -2,7 +2,7 @@ email?=nil
 image=looker
 license?=nil
 repository?=honestica
-version?=22.20
+version?=nil
 
 all: help
 
@@ -14,11 +14,11 @@ help:
 	@grep -E '^[a-zA-Z_-]+\?=.*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = "?="}; {printf "\033[36m%-20s\033[0m default: %s\n", $$1, $$2}'
 
 .PHONY: build
-build: download ## Build the given image (options: repository, image, version, email, license)
+build: download ## Build the given image | make build version=22.20 email=some@email.com license=ABCD [repository=honestica] [image=looker]
 	@docker build -t $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license)) --build-arg EMAIL=$(email) --build-arg LICENSE=$(license) .
 
 .PHONY: download
-download: ## Download looker jar (version, email, license)
+download: ## Download looker jar | make download version=22.20 email=some@email.com license=ABCD
 	@scripts/download --version $(version) --email $(email) --license $(license)
 
 .PHONY: setup
@@ -26,11 +26,11 @@ setup: ## Install local requirement to work on this image
 	cd spec && bundle
 
 .PHONY: sh
-sh: ## Get a shell on given image (options: repository, image, version)
+sh: ## Get a shell on given image | make sh version=20.20 [repository=honestica] [image=looker]
 	@docker run --rm -it -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
 
 .PHONY: test
-test: ## Run tests on given image (options: repository, image, version)
+test: ## Run tests on given image | make test version=22.20 [repository=] [image=]
 	@REPOSITORY=$(repository) IMAGE=$(image) TAG=$(shell scripts/full_version --version $(version) --email $(email) --license $(license)) rspec -c spec
 
 .PHONY: test-hadolint
@@ -38,5 +38,5 @@ test-hadolint: ## Run hadolint test
 	docker run --rm -v $(PWD):/srv -w /srv hadolint/hadolint hadolint Dockerfile
 
 .PHONY: version
-version:
+version: ## Run the full version (with patch) for the minor one
 	@scripts/full_version --version $(version) --email $(email) --license $(license)
