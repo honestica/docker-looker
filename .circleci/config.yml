@@ -2,6 +2,11 @@ version: 2.1
 orbs:
   bot: lifen/bot@0
 
+parameters:
+  looker-version:
+    type: string
+    default: "22.20"
+
 jobs:
   test:
     docker:
@@ -11,12 +16,12 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
           version: 20.10.12
-      - run: make build email=$EMAIL license=$LICENSE
+      - run: make build email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - run: make setup
-      - run: make test
+      - run: make test email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
   build-and-push:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/ruby:2.7.2
     steps:
       - checkout
       - run:
@@ -25,10 +30,18 @@ jobs:
             curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
             sudo apt-get install git-lfs
             git lfs fetch
+      - run:
+          name: Set LOOKER_VERSION
+          command: |
+            echo "export LOOKER_VERSION="$(make version email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>) >> "$BASH_ENV"
+            source "$BASH_ENV"
+            echo $LOOKER_VERSION
+      - run: make download email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - bot/docker-build-and-push:
           applicationName: looker
           dockerEngineVersion: 20.10.12
-          dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE
+          dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE --build-arg LOOKER_VERSION=$LOOKER_VERSION
+          dockerTag: $LOOKER_VERSION-$CIRCLE_SHA1
 
 workflows:
   version: 2
@@ -38,6 +51,8 @@ workflows:
           context: org-global
       - build-and-push:
           context: org-global
+          requires:
+            - test
           filters:
             branches:
               only:
