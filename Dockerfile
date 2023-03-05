@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20230126
+FROM ubuntu:jammy-20230301
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
