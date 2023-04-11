@@ -28,12 +28,12 @@ ENV OPENSSL_CONF /etc/ssl
 RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 | tar -C /tmp -xjf- \
  && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin
 
-ENV CHROME_VERSION 109.0.5414.74-1
-RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub | apt-key add \
+ENV CHROME_VERSION 112.0.5615.49-1
+RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
  && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
- && dpkg -i /tmp/chrome.deb; apt-get install --fix-broken -y --no-install-recommends \
+ && apt install --yes --no-install-recommends /tmp/chrome.deb \
  && rm /tmp/chrome.deb \
  && apt-get clean
 
