@@ -27,7 +27,7 @@ setup: ## Install local requirement to work on this image
 
 .PHONY: sh
 sh: ## Get a shell on given image | make sh version=20.20 [repository=honestica] [image=looker]
-	@docker run --rm -it -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
+	@docker run --rm --read-only --mount 'type=tmpfs,dst=/home/looker' --mount 'type=tmpfs,dst=/tmp' -it -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
 
 .PHONY: test
 test: ## Run tests on given image | make test version=22.20 [repository=] [image=]
