@@ -58,7 +58,7 @@ ENV LOOKER_VERSION $LOOKER_VERSION
 COPY looker.jar $LOOKER_DIR
 COPY looker-dependencies.jar $LOOKER_DIR
 
-RUN chown -R looker:looker $HOME
+RUN chown -R looker:looker $HOME /home/looker
 
 ENV PORT 9999
 ENV LOOKERPORT 9999

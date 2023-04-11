@@ -14,6 +14,7 @@ describe 'Dockerfile' do
     set :docker_image, "#{repository}/#{image}:#{tag}"
     set :docker_container_create_options,
         'Entrypoint' => ['tini', '--', '/bin/sh'],
+        'ReadonlyRootfs' => true,
         'HostConfig' => {
           'Binds' => [
             "#{File.expand_path __dir__}/page.html:/srv/page.html",
