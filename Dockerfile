@@ -76,7 +76,7 @@ RUN apt-get update \
  && apt-get clean
 
 # https://www.chromium.org/getting-involved/download-chromium/
-RUN curl -Ss "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1070081%2Fchrome-linux.zip?generation=1668128442427342&alt=media" -o /tmp/chrome.zip \
+RUN curl -Ss "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F960973%2Fchrome-linux.zip?generation=1642609777247754&alt=media" -o /tmp/chrome.zip \
  && unzip /tmp/chrome.zip -d /opt \
  && rm /tmp/chrome.zip
 
