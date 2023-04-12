@@ -54,7 +54,7 @@ describe 'Dockerfile' do
 
   describe command(
     <<~CMD
-      chromium --headless --remote-debugging-port=9222 &
+      chromium --headless --remote-debugging-port=9222 --hide-scrollbars --disable-gpu --disable-logging --disable-translate --force-device-scale-factor=1 --disable-extensions --disable-background-networking --safebrowsing-disable-auto-update --disable-sync --metrics-recording-only --disable-default-apps --mute-audio --no-first-run --no-default-browser-check --no-startup-window --disable-plugin-power-saver --disable-popup-blocking &
       sleep 2
       curl -Ssv http://127.0.0.1:9222
     CMD
