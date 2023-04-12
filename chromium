@@ -1,3 +1,4 @@
 #!/bin/bash
 export HOME=/home/looker
+export DBUS_SESSION_BUS_ADDRESS=/dev/null
 exec /opt/chrome-linux/chrome --no-sandbox --allow-insecure-localhost $@
