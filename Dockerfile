@@ -5,13 +5,10 @@ RUN apt-get update \
     bzip2 \
     ca-certificates \
     curl \
-    fontconfig \
-    fonts-freefont-otf \
     git \
     gnupg \
     jq \
     libc6-dev \
-    libfontconfig1 \
     mysql-client \
     netbase \
     openjdk-11-jre \
@@ -20,22 +17,68 @@ RUN apt-get update \
     tini \
     tzdata \
  && apt-get upgrade -y \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/*
+ && apt-get clean
 
 ENV PHANTOMJS_VERSION 2.1.1
 ENV OPENSSL_CONF /etc/ssl
 RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 | tar -C /tmp -xjf- \
  && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin
 
-ENV CHROME_VERSION 112.0.5615.49-1
-RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
- && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
- && apt-get update \
- && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
- && apt install --yes --no-install-recommends /tmp/chrome.deb \
- && rm /tmp/chrome.deb \
+# Chromium dependencies
+RUN apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
+    fontconfig \
+    fonts-freefont-otf \
+    fonts-liberation \
+    libatk-bridge2.0-0 \
+    libatk1.0-0 \
+    libcairo-gobject2 \
+    libcairo2 \
+    libcolord2 \
+    libdatrie1 \
+    libdeflate0 \
+    libepoxy0 \
+    libfontconfig1 \
+    libfribidi0 \
+    libgbm1 \
+    libgdk-pixbuf-2.0-0 \
+    libgdk-pixbuf2.0-common \
+    libgtk-3-0 \
+    libgtk-3-common \
+    libjbig0 \
+    libpango-1.0-0 \
+    libpangocairo-1.0-0 \
+    libpangoft2-1.0-0 \
+    libpixman-1-0 \
+    libthai-data \
+    libthai0 \
+    libtiff5 \
+    libu2f-udev \
+    libvulkan1 \
+    libwayland-client0 \
+    libwayland-cursor0 \
+    libwayland-egl1 \
+    libwayland-server0 \
+    libwebp7 \
+    libxcb-render0 \
+    libxcomposite1 \
+    libxcursor1 \
+    libxdamage1 \
+    libxinerama1 \
+    libxkbcommon0 \
+    libxrandr2 \
+    shared-mime-info \
+    ubuntu-mono \
+    unzip \
+    wget \
+    xdg-utils \
+    xkb-data \
  && apt-get clean
+
+# https://www.chromium.org/getting-involved/download-chromium/
+RUN curl -Ss "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1070081%2Fchrome-linux.zip?generation=1668128442427342&alt=media" -o /tmp/chrome.zip \
+ && unzip /tmp/chrome.zip -d /opt \
+ && rm /tmp/chrome.zip
 
 COPY chromium /usr/bin
 RUN chmod +x /usr/bin/chromium
