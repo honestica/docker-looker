@@ -41,7 +41,7 @@ describe 'Dockerfile' do
   # https://community.looker.com/general-looker-administration-35/troubleshooting-common-chromium-errors-20621
   describe command('chromium --version') do
     its(:exit_status) { should eq 0 }
-    its(:stdout) { should match(/chrom.* 109\.0\.5414./i) }
+    its(:stdout) { should match(/chrom.* 99\.0\./i) }
   end
 
   describe command('chromium --headless --disable-gpu --print-to-pdf /srv/page.html') do
@@ -56,10 +56,16 @@ describe 'Dockerfile' do
     <<~CMD
       chromium --headless --remote-debugging-port=9222 --hide-scrollbars --disable-gpu --disable-logging --disable-translate --force-device-scale-factor=1 --disable-extensions --disable-background-networking --safebrowsing-disable-auto-update --disable-sync --metrics-recording-only --disable-default-apps --mute-audio --no-first-run --no-default-browser-check --no-startup-window --disable-plugin-power-saver --disable-popup-blocking &
       sleep 2
-      curl -Ssv http://127.0.0.1:9222
     CMD
   ) do
     its(:exit_status) { should eq 0 }
+    describe command('curl -Ssv http://127.0.0.1:9222') do
+      its(:exit_status) { should eq 0 }
+      describe command('curl -Ss http://127.0.0.1:9222/json/version') do
+        its(:exit_status) { should eq 0 }
+        its(:stdout) { should match(/Browser.*HeadlessChrome/) }
+      end
+    end
   end
 
 
