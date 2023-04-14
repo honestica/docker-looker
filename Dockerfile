@@ -75,7 +75,7 @@ RUN apt-get update \
     xkb-data \
  && apt-get clean
 
-ENV CHROME_VERSION 96.0.4664.110-1
+ENV CHROME_VERSION 97.0.4692.99-1
 RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
  && apt-get update \
