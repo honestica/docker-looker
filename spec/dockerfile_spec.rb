@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 require 'docker-api'
+require 'json'
+require 'net/http'
 require 'serverspec'
 
 image = ENV['IMAGE']
@@ -14,11 +16,14 @@ describe 'Dockerfile' do
     set :docker_image, "#{repository}/#{image}:#{tag}"
     set :docker_container_create_options,
         'Entrypoint' => ['tini', '--', '/bin/sh'],
+        'CapDrop' => ['ALL'],
+        'Privileged' => false,
         'ReadonlyRootfs' => true,
         'HostConfig' => {
           'Binds' => [
             "#{File.expand_path __dir__}/page.html:/srv/page.html",
-          ]
+          ],
+          'GroupAdd' => ['2000'],
         }
 
     if ENV.include?('DOCKER_HOST')
@@ -46,10 +51,13 @@ describe 'Dockerfile' do
 
   describe command('chromium --headless --disable-gpu --print-to-pdf /srv/page.html') do
     its(:exit_status) { should eq 0 }
-  end
-
-  describe file('output.pdf') do
-    it { should exist }
+    describe file('output.pdf') do
+      it { should exist }
+    end
+    describe command('head -1 output.pdf') do
+      its(:exit_status) { should eq 0 }
+      its(:stdout) { should match(/PDF/) }
+    end
   end
 
   describe command(
@@ -61,13 +69,22 @@ describe 'Dockerfile' do
     its(:exit_status) { should eq 0 }
     describe command('curl -Ssv http://127.0.0.1:9222') do
       its(:exit_status) { should eq 0 }
-      describe command('curl -Ss http://127.0.0.1:9222/json/version') do
-        its(:exit_status) { should eq 0 }
-        its(:stdout) { should match(/Browser.*HeadlessChrome/) }
-      end
+    end.after do
+      # https://chromedevtools.github.io/devtools-protocol/
+      version = command('curl -Ss http://127.0.0.1:9222/json/version').stdout_as_json
+      expect(version['Browser']).to match(/HeadlessChrome/)
+
+      new_page = command('curl -Ss -XPUT http://127.0.0.1:9222/json/new?https://www.lifen.fr/').stdout_as_json
+      expect(new_page).to include('url')
+      expect(new_page).to include('devtoolsFrontendUrl')
+      expect(new_page).to include('webSocketDebuggerUrl')
+      expect(new_page['url']).to eq('https://www.lifen.fr/')
+      expect(new_page['devtoolsFrontendUrl']).to match(%r{/devtools/inspector\.html\?ws=127\.0\.0\.1:9222/devtools/page})
+      expect(new_page['webSocketDebuggerUrl']).to match(%r{ws://127\.0\.0\.1:9222/devtools/page/})
+
+      # We should now test: https://chromedevtools.github.io/devtools-protocol/tot/Page/#method-printToPDF 🙏
     end
   end
-
 
   describe file('/etc/protocols') do
     it { should exist }
