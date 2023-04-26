@@ -75,10 +75,13 @@ RUN apt-get update \
     xkb-data \
  && apt-get clean
 
-# https://www.chromium.org/getting-involved/download-chromium/
-RUN curl -Ss "https://www.googleapis.com/download/storage/v1/b/chromium-browser-snapshots/o/Linux_x64%2F1070081%2Fchrome-linux.zip?generation=1668128442427342&alt=media" -o /tmp/chrome.zip \
- && unzip /tmp/chrome.zip -d /opt \
- && rm /tmp/chrome.zip
+ENV CHROME_VERSION 97.0.4692.99-1
+RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
+ && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
+ && apt-get update \
+ && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
+ && apt install --yes --no-install-recommends /tmp/chrome.deb \
+ && apt-get clean
 
 COPY chromium /usr/bin
 RUN chmod +x /usr/bin/chromium
