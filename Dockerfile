@@ -75,11 +75,12 @@ RUN apt-get update \
     xkb-data \
  && apt-get clean
 
-ENV CHROME_VERSION 113.0.5672.126-1
+ENV CHROME_VERSION 97.0.4692.99-1
+# Dirty fix due to unavailability of the upper chrome version
+COPY --from=honestica/looker:23.6.77-efe426d1f137a8931288ed547cdf89a3a5c13008 /tmp/chrome.deb /tmp/chrome.deb
 RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
  && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
- && apt-get update \
- && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb
+ && apt-get update
 RUN apt install --yes --no-install-recommends /tmp/chrome.deb \
  && apt-get clean
 

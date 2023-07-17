@@ -16,6 +16,7 @@ jobs:
       - setup_remote_docker:
           docker_layer_caching: true
           version: 20.10.12
+      - run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       - run: make build email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - run: make setup
       - run: make test email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
