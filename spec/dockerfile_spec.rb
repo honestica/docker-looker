@@ -19,9 +19,11 @@ describe 'Dockerfile' do
         'CapDrop' => ['ALL'],
         'Privileged' => false,
         'ReadonlyRootfs' => true,
+        'WorkingDir' => '/home/looker',
         'HostConfig' => {
           'Binds' => [
             "#{File.expand_path __dir__}/page.html:/srv/page.html",
+            "looker-test:/home/looker:rw",
           ],
           'GroupAdd' => ['2000'],
         }
@@ -88,5 +90,17 @@ describe 'Dockerfile' do
 
   describe file('/etc/protocols') do
     it { should exist }
+  end
+
+  describe command(
+    <<~SHELL
+      ln -fs $LOOKER_DIR/looker.jar /home/looker \
+      && ln -fs /opt/looker/looker-dependencies.jar /home/looker \
+      && java $JAVAJVMARGS $JAVAARGS -jar $LOOKER_DIR/looker.jar version
+    SHELL
+  ) do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/^23\.10\./) }
+    its(:stderr) { should_not match(/fatal|error|exception/i) }
   end
 end

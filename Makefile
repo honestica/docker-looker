@@ -27,10 +27,12 @@ setup: ## Install local requirement to work on this image
 
 .PHONY: sh
 sh: ## Get a shell on given image | make sh version=20.20 [repository=honestica] [image=looker]
-	@docker run --rm --read-only --mount 'type=tmpfs,dst=/home/looker' --mount 'type=tmpfs,dst=/tmp' -it -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
+	docker volume create --name looker-test
+	@docker run --rm -it --read-only -w /home/looker --mount 'type=tmpfs,dst=/tmp' -v looker-test:/home/looker:rw -v $(PWD):/srv --entrypoint /bin/bash $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license))
 
 .PHONY: test
 test: ## Run tests on given image | make test version=22.20 [repository=] [image=]
+	docker volume create --name looker-test
 	@REPOSITORY=$(repository) IMAGE=$(image) TAG=$(shell scripts/full_version --version $(version) --email $(email) --license $(license)) rspec -c spec
 
 .PHONY: test-hadolint
