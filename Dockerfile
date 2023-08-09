@@ -105,6 +105,10 @@ ENV LOOKER_VERSION $LOOKER_VERSION
 COPY looker.jar $LOOKER_DIR
 COPY looker-dependencies.jar $LOOKER_DIR
 
+ENV JMX_EXPORTER_VERSION 0.19.0
+RUN curl https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/$JMX_EXPORTER_VERSION/jmx_prometheus_javaagent-$JMX_EXPORTER_VERSION.jar -o $LOOKER_DIR/jmx_prometheus_javaagent.jar
+COPY jmx_prometheus_javaagent.yaml $LOOKER_DIR/jmx_prometheus_javaagent.yaml
+
 RUN chown -R looker:looker $HOME /home/looker
 
 ENV PORT 9999
@@ -114,8 +118,9 @@ EXPOSE 9999
 ENV API_PORT 19999
 EXPOSE 19999
 
-ENV JMXARGS "-Dlog4j.formatMsgNoLookups=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.port=9910 -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.ssl=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.local.only=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.authenticate=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.access.file=$HOME/.lookerjmx/jmxremote.access -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.password.file=$HOME/.lookerjmx/jmxremote.password"
-ENV JAVAARGS ""
+# unused, add it to JAVAARGS to set up JMX monitoring
+ENV JMXARGS "-Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.port=9910 -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.ssl=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.local.only=false -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.authenticate=true -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.access.file=$HOME/.lookerjmx/jmxremote.access -Dcom.sun.akuma.jvmarg.com.sun.management.jmxremote.password.file=$HOME/.lookerjmx/jmxremote.password"
+ENV JAVAARGS "-Dlog4j.formatMsgNoLookups=true -javaagent:$LOOKER_DIR/jmx_prometheus_javaagent.jar=8080:$LOOKER_DIR/jmx_prometheus_javaagent.yaml"
 ENV JAVAJVMARGS "-XX:+UseG1GC -XX:MaxGCPauseMillis=2000 -XX:MinRAMPercentage=50 -XX:MaxRAMPercentage=80"
 ENV LOOKERARGS "--no-daemonize --log-format=json --no-log-to-file"
 ENV LOOKEREXTRAARGS ""
