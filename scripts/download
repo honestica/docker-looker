@@ -8,7 +8,7 @@ opts = GetoptLong.new(
   [ '--version', '-v', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--license', '-l', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--email', '-e', GetoptLong::REQUIRED_ARGUMENT ],
-  [ '--help', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--help', GetoptLong::NO_ARGUMENT ],
 )
 
 def usage
