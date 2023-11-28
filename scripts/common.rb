@@ -24,7 +24,7 @@ class Looker
   end
 
   def download(url, destination)
-    return if File.exist?(destination) && (File.stat(destination).ctime > Time.now() - 3600)
+    return if File.exist?(destination) && (File.stat(destination).ctime > Time.now() - 86_400)
 
     f = File.open(destination, 'w')
     f.write(Net::HTTP.get(URI(url)))
@@ -36,7 +36,7 @@ class Looker
   def metadata
     @metadata ||= begin
       res = nil
-      if File.exist?('response.json') && (File.stat('response.json').ctime > Time.now() - 3600)
+      if File.exist?('response.json') && (File.stat('response.json').ctime > Time.now() - 86_400)
         response = File.open('response.json')
         res = JSON.load(response.read)
         response.close
