@@ -52,9 +52,9 @@ workflows:
           context: org-global
       - build-and-push:
           context: org-global
-          requires:
-            - test
 # temporarly commented
+#          requires:
+#            - test
 #          filters:
 #            branches:
 #              only:
