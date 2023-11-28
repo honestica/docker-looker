@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20230624
+FROM debian:bookworm-20231120
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
@@ -76,16 +76,9 @@ RUN apt-get update \
     xkb-data \
  && apt-get clean
 
-ENV CHROME_VERSION 113.0.5672.63-1
-RUN curl -Ss https://dl.google.com/linux/linux_signing_key.pub > /etc/apt/trusted.gpg.d/google-chrome.asc \
- && echo 'deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google-chrome.list \
- && apt-get update \
- && curl -Ss https://dl.google.com/linux/chrome/deb/pool/main/g/google-chrome-stable/google-chrome-stable_${CHROME_VERSION}_amd64.deb -o /tmp/chrome.deb \
- && apt install --yes --no-install-recommends /tmp/chrome.deb \
+RUN apt-get update \
+ && DEBIAN_FRONTEND="noninteractive" apt install --yes --no-install-recommends chromium \
  && apt-get clean
-
-COPY chromium /usr/bin
-RUN chmod +x /usr/bin/chromium
 
 RUN pip3 install boto3==1.24.20
 COPY assume_role_exec /usr/bin
