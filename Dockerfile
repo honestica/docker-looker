@@ -10,9 +10,9 @@ RUN apt-get update \
     jq \
     libc6-dev \
     maven \
-    mysql-client \
+    default-mysql-client \
     netbase \
-    openjdk-11-jre \
+    openjdk-17-jre \
     python3 \
     python3-pip \
     tini \
