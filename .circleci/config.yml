@@ -54,7 +54,8 @@ workflows:
           context: org-global
           requires:
             - test
-          filters:
-            branches:
-              only:
-                - "master"
+# temporarly commented
+#          filters:
+#            branches:
+#              only:
+#                - "master"
