@@ -1,3 +1,3 @@
 #!/bin/bash
 export HOME=/home/looker
-exec google-chrome --no-sandbox $@
+exec google-chrome --no-sandbox $@ > /proc/self/fd/1 2>&1
