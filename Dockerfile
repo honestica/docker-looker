@@ -85,11 +85,10 @@ COPY assume_role_exec /usr/bin
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
 
-ENV HOME /opt/looker
+ENV HOME /home/looker
 ENV LOOKER_DIR /opt/looker
 
-RUN mkdir -p $HOME
-RUN mkdir -p $LOOKER_DIR
+RUN mkdir -p $HOME $LOOKER_DIR
 
 WORKDIR $HOME
 
@@ -111,7 +110,7 @@ RUN mvn dependency:get \
  && mv $LOOKER_DIR/jmx_prometheus_javaagent-${JMX_EXPORTER_VERSION}.jar $LOOKER_DIR/jmx_prometheus_javaagent.jar
 COPY jmx_prometheus_javaagent.yaml $LOOKER_DIR/jmx_prometheus_javaagent.yaml
 
-RUN chown -R looker:looker $HOME /home/looker
+RUN chown -R looker:looker $HOME $LOOKER_DIR
 
 ENV PORT 9999
 ENV LOOKERPORT 9999
