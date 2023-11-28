@@ -48,7 +48,7 @@ describe 'Dockerfile' do
   # https://community.looker.com/general-looker-administration-35/troubleshooting-common-chromium-errors-20621
   describe command('chromium --version') do
     its(:exit_status) { should eq 0 }
-    its(:stdout) { should match(/chrom.* 97\./i) }
+    its(:stdout) { should match(/chrom.* 109\./i) }
   end
 
   describe command('chromium --headless --disable-gpu --print-to-pdf /srv/page.html') do
