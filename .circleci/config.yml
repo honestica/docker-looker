@@ -10,7 +10,7 @@ parameters:
 jobs:
   test:
     docker:
-      - image: cimg/ruby:2.7.2
+      - image: cimg/ruby:3.0
     steps:
       - checkout
       - setup_remote_docker:
@@ -22,7 +22,7 @@ jobs:
       - run: make test email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
   build-and-push:
     docker:
-      - image: cimg/ruby:2.7.2
+      - image: cimg/ruby:3.0
     steps:
       - checkout
       - run:
