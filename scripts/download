@@ -8,6 +8,7 @@ opts = GetoptLong.new(
   [ '--version', '-v', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--license', '-l', GetoptLong::REQUIRED_ARGUMENT ],
   [ '--email', '-e', GetoptLong::REQUIRED_ARGUMENT ],
+  [ '--no-cache', GetoptLong::NO_ARGUMENT ],
   [ '--help', GetoptLong::NO_ARGUMENT ],
 )
 
@@ -24,6 +25,7 @@ end
 version = nil
 license = nil
 email = nil
+no_cache = false
 opts.each do |opt, arg|
   case opt
   when '--help'
@@ -34,6 +36,8 @@ opts.each do |opt, arg|
     license = arg
   when '--email'
     email = arg
+  when '--no-cache'
+    no_cache = true
   else
     puts "Unknown option !"
     usage
@@ -43,5 +47,6 @@ end
 usage if version.nil? || license.nil? || email.nil?
 
 looker = Looker.new(version, license, email)
-looker.download(looker.jar_url, 'looker.jar')
-looker.download(looker.jar_dependency_url, 'looker-dependencies.jar')
+looker.clear_cache if no_cache
+looker.download_jar
+looker.download_jar_dependency
