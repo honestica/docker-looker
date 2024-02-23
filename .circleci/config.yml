@@ -15,7 +15,7 @@ jobs:
       - checkout
       - setup_remote_docker:
           docker_layer_caching: true
-          version: 24
+          version: docker24
       - run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
       - run: make build email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - run: make setup
@@ -40,7 +40,7 @@ jobs:
       - run: make download email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - bot/docker-build-and-push:
           applicationName: looker
-          dockerEngineVersion: "24"
+          dockerEngineVersion: docker24
           dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE --build-arg LOOKER_VERSION=$LOOKER_VERSION
           dockerTag: $LOOKER_VERSION-$CIRCLE_SHA1
 
