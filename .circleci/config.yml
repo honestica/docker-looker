@@ -40,7 +40,7 @@ jobs:
       - run: make download email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
       - bot/docker-build-and-push:
           applicationName: looker
-          dockerEngineVersion: 20.10.12
+          dockerEngineVersion: "24"
           dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE --build-arg LOOKER_VERSION=$LOOKER_VERSION
           dockerTag: $LOOKER_VERSION-$CIRCLE_SHA1
 
