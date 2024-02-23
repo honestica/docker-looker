@@ -1,4 +1,4 @@
-FROM ubuntu:jammy-20240212
+FROM ubuntu:noble-20240212
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
@@ -53,7 +53,7 @@ RUN apt-get update \
     libpixman-1-0 \
     libthai-data \
     libthai0 \
-    libtiff5 \
+    libtiff6 \
     libu2f-udev \
     libvulkan1 \
     libwayland-client0 \
@@ -68,6 +68,7 @@ RUN apt-get update \
     libxinerama1 \
     libxkbcommon0 \
     libxrandr2 \
+    python3-boto3 \
     shared-mime-info \
     ubuntu-mono \
     unzip \
@@ -88,7 +89,6 @@ RUN apt install --yes --no-install-recommends /tmp/chrome.deb \
 COPY chromium /usr/bin
 RUN chmod +x /usr/bin/chromium
 
-RUN pip3 install boto3==1.24.20
 COPY assume_role_exec /usr/bin
 
 RUN groupadd looker && useradd -m -g looker -s /bin/bash looker
