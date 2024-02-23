@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative 'common'
+
+Looker.new(nil, nil, nil).clear_cache
