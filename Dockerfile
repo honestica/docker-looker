@@ -108,7 +108,7 @@ COPY looker.jar $LOOKER_DIR
 COPY looker-dependencies.jar $LOOKER_DIR
 RUN update-alternatives --set java /usr/lib/jvm/java-11-openjdk-amd64/bin/java
 
-ENV JMX_EXPORTER_VERSION 0.17.2
+ENV JMX_EXPORTER_VERSION 0.19.0
 RUN mvn dependency:get \
     -DremoteRepositories=http://repo1.maven.org/maven2/ \
     -DgroupId=io.prometheus.jmx \
