@@ -111,10 +111,7 @@ describe 'Dockerfile' do
       && java $JAVAJVMARGS $JAVAARGS -javaagent:/opt/looker/jmx_prometheus_javaagent.jar=8080:/opt/looker/jmx_prometheus_javaagent.yaml -jar $LOOKER_DIR/looker.jar version
     SHELL
   ) do
-    # If this test fails, then the conflict between the JMX agent and the Looker application is fixed 🎉
-    #   you can remove it and move the JMX agent arguments from this test to the previous one
-    #   See INFRAOPS-6513 and https://github.com/lifen-infrastructure/k8s/pull/4612
-    its(:exit_status) { should eq 1 }
-    its(:stderr) { should match(/error: org.jruby.embed.evalfailedexception:.*SnakeYAML/i) }
+    its(:exit_status) { should eq 0 }
+    its(:stderr) { should_not match(/error:/i) }
   end
 end
