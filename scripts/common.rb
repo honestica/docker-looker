@@ -34,11 +34,11 @@ class Looker
   end
 
   def download_jar
-    download(jar_url, 'looker.jar')
+    download(jar_url, 'docker/looker.jar')
   end
 
   def download_jar_dependency
-    download(jar_dependency_url, 'looker-dependencies.jar')
+    download(jar_dependency_url, 'docker/looker-dependencies.jar')
   end
 
   private

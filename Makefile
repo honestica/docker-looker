@@ -15,7 +15,7 @@ help:
 
 .PHONY: build
 build: download ## Build the given image | make build version=25.10 email=some@email.com license=ABCD [repository=honestica] [image=looker]
-	@docker build -t $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license)) --build-arg EMAIL=$(email) --build-arg LICENSE=$(license) .
+	@docker build -t $(repository)/$(image):$(shell scripts/full_version --version $(version) --email $(email) --license $(license)) --build-arg EMAIL=$(email) --build-arg LICENSE=$(license) docker
 
 .PHONY: download
 download: ## Download looker jar | make download version=25.10 email=some@email.com license=ABCD
@@ -37,7 +37,7 @@ test: ## Run tests on given image | make test version=25.10 [repository=] [image
 
 .PHONY: test-hadolint
 test-hadolint: ## Run hadolint test
-	docker run --rm -v $(PWD):/srv -w /srv hadolint/hadolint hadolint Dockerfile
+	docker run --rm -v $(PWD):/srv -w /srv hadolint/hadolint hadolint docker/Dockerfile
 
 .PHONY: version
 version: ## Run the full version (with patch) for the minor one
