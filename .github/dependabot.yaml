@@ -9,6 +9,3 @@ updates:
     time: "02:00"
     timezone: Europe/Paris
   target-branch: master
-  reviewers:
-  - marcmillien
-  - mtparet
