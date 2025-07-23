@@ -51,6 +51,10 @@ workflows:
           context: org-global
       - build-and-push:
           context: org-global
+          pre-steps:
+            - checkout
+            - bot/check-changed-files-or-halt:
+                pattern: 'docker/'
           requires:
             - test
           filters:
