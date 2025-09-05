@@ -9,7 +9,6 @@ RUN apt-get update \
     gnupg \
     jq \
     libc6-dev \
-    maven \
     mysql-client \
     netbase \
     openjdk-11-jre \
@@ -25,6 +24,10 @@ ENV OPENSSL_CONF /etc/ssl
 RUN curl -Ss --location -o- https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64.tar.bz2 | tar -C /tmp --no-same-permissions -xjf- \
  && mv /tmp/phantomjs-${PHANTOMJS_VERSION}-linux-x86_64/bin/phantomjs /usr/bin \
  && chmod +x /usr/bin/phantomjs
+
+ENV MAVEN_VERSION 3.9.11
+RUN curl -Ss --location -o- https://dlcdn.apache.org/maven/maven-3/${MAVEN_VERSION}/binaries/apache-maven-${MAVEN_VERSION}-bin.tar.gz | tar -C /opt --no-same-permissions -xz \
+ && ln -s /opt/apache-maven-${MAVEN_VERSION}/bin/mvn /usr/bin/mvn
 
 # Chromium dependencies
 RUN apt-get update \

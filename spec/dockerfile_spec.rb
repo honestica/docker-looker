@@ -40,6 +40,11 @@ describe 'Dockerfile' do
     its(:exit_status) { should eq 0 }
   end
 
+  describe command('mvn --version') do
+    its(:exit_status) { should eq 0 }
+    its(:stdout) { should match(/Apache Maven 3\./) }
+  end
+
   describe command('phantomjs --version') do
     its(:exit_status) { should eq 0 }
     its(:stdout) { should match(/^2\./) }
