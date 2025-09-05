@@ -41,6 +41,7 @@ jobs:
       - bot/docker-build-and-push:
           applicationName: looker
           dockerEngineVersion: docker24
+          dockerfilePath: docker/
           dockerBuildOptions: --build-arg EMAIL=$EMAIL --build-arg LICENSE=$LICENSE --build-arg LOOKER_VERSION=$LOOKER_VERSION
           dockerTag: $LOOKER_VERSION-$CIRCLE_SHA1
 
