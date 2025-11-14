@@ -5,7 +5,7 @@ orbs:
 parameters:
   looker-version:
     type: string
-    default: "25.10"
+    default: "25.20"
 
 jobs:
   test:
