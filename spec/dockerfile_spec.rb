@@ -105,7 +105,7 @@ describe 'Dockerfile' do
     SHELL
   ) do
     its(:exit_status) { should eq 0 }
-    its(:stdout) { should match(/^25\./) }
+    its(:stdout) { should match(/^26\./) }
     its(:stderr) { should_not match(/fatal|error|exception/i) }
   end
 
