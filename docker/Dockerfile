@@ -1,4 +1,4 @@
-FROM ubuntu:noble-20260324
+FROM ubuntu:noble-20260410
 
 RUN apt-get update \
  && DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
