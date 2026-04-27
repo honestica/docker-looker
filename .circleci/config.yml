@@ -14,7 +14,7 @@ jobs:
     steps:
       - checkout
       - bot/check-multiple-changed-files-or-halt:
-          patterns: "docker/"
+          patterns: ".circleci/config.yml,docker/"
       - setup_remote_docker:
           docker_layer_caching: true
           version: docker24
@@ -57,7 +57,7 @@ workflows:
           pre-steps:
             - checkout
             - bot/check-multiple-changed-files-or-halt:
-                patterns: "docker/"
+                patterns: ".circleci/config.yml,docker/"
           requires:
             - test
           filters:
