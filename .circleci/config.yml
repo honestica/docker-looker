@@ -7,6 +7,17 @@ parameters:
     type: string
     default: "26.6"
 
+commands:
+  check-changed-files-or-halt-custom:
+    parameters:
+      pattern:
+        type: string
+      revision:
+        type: string
+        default: master
+    steps:
+      - run: git show << parameters.revision >>..HEAD --name-only --pretty="" | egrep '<< parameters.pattern >>' || circleci-agent step halt
+
 jobs:
   test:
     docker:
@@ -57,9 +68,9 @@ workflows:
           context: org-global
           pre-steps:
             - checkout
-            - bot/check-changed-files-or-halt:
+            - check-changed-files-or-halt-custom:
                 pattern: ".circleci/config.yml|docker/"
-                revision: 'master'
+                revision: 'HEAD^'
           requires:
             - test
           filters:
