@@ -13,8 +13,9 @@ jobs:
       - image: cimg/ruby:3.0
     steps:
       - checkout
-      - bot/check-multiple-changed-files-or-halt:
-          patterns: ".circleci/config.yml,docker/"
+      - bot/check-changed-files-or-halt:
+          pattern: ".circleci/config.yml,docker/"
+          revision: 'HEAD^'
       - setup_remote_docker:
           docker_layer_caching: true
           version: docker24
@@ -56,8 +57,9 @@ workflows:
           context: org-global
           pre-steps:
             - checkout
-            - bot/check-multiple-changed-files-or-halt:
-                patterns: ".circleci/config.yml,docker/"
+            - bot/check-changed-files-or-halt:
+                pattern: ".circleci/config.yml,docker/"
+                revision: 'HEAD^'
           requires:
             - test
           filters:
