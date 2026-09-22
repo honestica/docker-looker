@@ -28,10 +28,12 @@ The current version is `looker-7.20.29.jar`.
 
 ```bash
 .
-├── Dockerfile # the Docker Image
+├── docker     # Directory which contains all pre-requisite to build docker image
 ├── LICENSE
-├── Notes.md # Explanations and usage for the current changes
-├── README.md # Deprecated version
+├── Makefile
+├── README.md
+├── scripts    # Directory which contains scripts use by `Makefile`
+└── spec       # Directory which contains tests
 ```
 
 
