@@ -24,6 +24,8 @@ jobs:
       - image: cimg/ruby:4.0
     steps:
       - checkout
+      # We need to use different CircleCI job in this case
+      # In this case, we would like to run test when opening a PR (or pushing commit)
       - bot/check-changed-files-or-halt:
           pattern: ".circleci/config.yml|docker/"
           revision: 'master'
@@ -68,6 +70,11 @@ workflows:
           context: org-global
           pre-steps:
             - checkout
+            # We use a custom CircleCI job in this case
+            # In this case, we would like to run a docker build, when the PR is merged
+            # We will check modified files using `HEAD^` revision
+            # That's why we can't use `bot/check-changed-files-or-halt` => this one will
+            # check that a `HEAD^` branch exists
             - check-changed-files-or-halt-custom:
                 pattern: ".circleci/config.yml|docker/"
                 revision: 'HEAD^'
