@@ -7,26 +7,15 @@ parameters:
     type: string
     default: "26.6"
 
-commands:
-  check-changed-files-or-halt:
-    parameters:
-      pattern:
-        type: string
-      revision:
-        type: string
-        default: master
-    steps:
-      - run: git show << parameters.revision >>..HEAD --name-only --pretty="" | egrep '<< parameters.pattern >>' || circleci-agent step halt
-
 jobs:
   test:
     docker:
-      - image: cimg/ruby:3.0
+      - image: cimg/ruby:4.0
     steps:
       - checkout
-      - check-changed-files-or-halt:
-          pattern: ".circleci/config.yml,docker/"
-          revision: 'HEAD^'
+      - bot/check-changed-files-or-halt:
+          pattern: ".circleci/config.yml|docker/"
+          revision: 'master'
       - setup_remote_docker:
           docker_layer_caching: true
           version: docker24
@@ -36,7 +25,7 @@ jobs:
       - run: make test email=$EMAIL license=$LICENSE version=<< pipeline.parameters.looker-version >>
   build-and-push:
     docker:
-      - image: cimg/ruby:3.0
+      - image: cimg/ruby:4.0
     steps:
       - checkout
       - run:
@@ -68,9 +57,9 @@ workflows:
           context: org-global
           pre-steps:
             - checkout
-            - check-changed-files-or-halt:
-                pattern: ".circleci/config.yml,docker/"
-                revision: 'HEAD^'
+            - bot/check-changed-files-or-halt:
+                pattern: ".circleci/config.yml|docker/"
+                revision: 'master'
           requires:
             - test
           filters:
