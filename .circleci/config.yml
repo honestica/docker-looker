@@ -16,7 +16,7 @@ commands:
         type: string
         default: master
     steps:
-      - run: git show << parameters.revision >>..HEAD --name-only --pretty="" | egrep '<< parameters.pattern >>' || circleci-agent step halt
+      - run: git show << parameters.revision >>..HEAD --name-only --pretty="" | grep -E '<< parameters.pattern >>' || circleci-agent step halt
 
 jobs:
   test:
@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - check-changed-files-or-halt:
-          pattern: ".circleci/config.yml,docker/"
+          pattern: ".circleci/config.yml|docker/"
           revision: 'HEAD^'
       - setup_remote_docker:
           docker_layer_caching: true
@@ -69,7 +69,7 @@ workflows:
           pre-steps:
             - checkout
             - check-changed-files-or-halt:
-                pattern: ".circleci/config.yml,docker/"
+                pattern: ".circleci/config.yml|docker/"
                 revision: 'HEAD^'
           requires:
             - test
