@@ -25,7 +25,7 @@ jobs:
     steps:
       - checkout
       - check-changed-files-or-halt:
-          pattern: "docker/"
+          pattern: ".circleci/config.yml,docker/"
           revision: 'HEAD^'
       - setup_remote_docker:
           docker_layer_caching: true
@@ -69,7 +69,7 @@ workflows:
           pre-steps:
             - checkout
             - check-changed-files-or-halt:
-                pattern: "docker/"
+                pattern: ".circleci/config.yml,docker/"
                 revision: 'HEAD^'
           requires:
             - test
